@@ -3,11 +3,10 @@
 (def input 
      (mapv #(Integer/parseInt %) (s/split-lines (slurp "input"))))
 
-(doseq [x input]
-  (let [results (into []
-                      (comp
-                        (map (fn [y] [(+ x y) (* x y)]))
-                        (filter (fn [y] (= (first y) 2020))))
-                      input)]
-    (when (= 2020 (ffirst results))
-      (println (second (first results))))))
+(def solve
+    (second (first (->> input
+                        (map-indexed (fn [i x] [x, (drop (inc i) input)]))
+                        (mapcat (fn [[x ys]] (map (fn [y] [(+ x y) (* x y)]) ys)))
+                        (filter (fn [[sum prod]] (= sum 2020)))))))
+
+(println solve)
